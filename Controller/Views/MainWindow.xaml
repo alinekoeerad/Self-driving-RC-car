@@ -1,0 +1,302 @@
+﻿<Window x:Class="Controller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Controller.ViewModels"
+        mc:Ignorable="d"
+        Title="Robot Control Center" Height="800" Width="1200"
+        Background="#1e272e" MinWidth="1024" MinHeight="768">
+
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#1e272e"/>
+        <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#2f3640"/>
+        <SolidColorBrush x:Key="TitleForegroundBrush" Color="#487eb0"/>
+        <SolidColorBrush x:Key="TextForegroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="GrayTextBrush" Color="Gray"/>
+
+        <SolidColorBrush x:Key="ButtonGreenBrush" Color="#27ae60"/>
+        <SolidColorBrush x:Key="ButtonRedBrush" Color="#c0392b"/>
+        <SolidColorBrush x:Key="ButtonOrangeBrush" Color="#f39c12"/>
+        <SolidColorBrush x:Key="ButtonBlueBrush" Color="#3498db"/>
+        <SolidColorBrush x:Key="ButtonPurpleBrush" Color="#8e44ad"/>
+        <SolidColorBrush x:Key="ButtonGrayBrush" Color="#7f8c8d"/>
+
+        <Style x:Key="MainPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PanelBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="5" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#1e272e"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <Style x:Key="TitleTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TitleForegroundBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="ControlButtonBaseStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="{StaticResource TextForegroundBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="3"
+                                BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StartButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonGreenBrush}"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+        </Style>
+        <Style x:Key="StopButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonRedBrush}"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+        <Style x:Key="ResetButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonOrangeBrush}"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+        <Style x:Key="CalibrateButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonBlueBrush}"/>
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+        <Style x:Key="PerspectiveButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonPurpleBrush}"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ControlButtonBaseStyle}">
+            <Setter Property="Background" Value="{StaticResource ButtonGrayBrush}"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="129*"/>
+            <RowDefinition Height="253*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="350"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource MainPanelStyle}" Margin="0,0,10,0">
+                <Grid>
+                    <Viewbox Stretch="Uniform">
+                        <Image x:Name="LiveVideoImage" Source="{Binding LiveVideoFrame}" />
+                    </Viewbox>
+                    <ItemsControl ItemsSource="{Binding PerspectivePoints}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Background="Transparent" MouseLeftButtonDown="Canvas_MouseLeftButtonDown"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Ellipse Fill="#FF1493" Width="10" Height="10" Margin="-5,-5,0,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Style="{StaticResource MainPanelStyle}" Margin="0,10,10,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="EVENT LOG" Style="{StaticResource TitleTextStyle}"/>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding LogEntries}" Background="Transparent" BorderThickness="0" Margin="0,5,0,0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="{Binding Timestamp}" Foreground="{StaticResource GrayTextBrush}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding Message}" Foreground="{Binding MessageColor}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Column="1" Style="{StaticResource MainPanelStyle}" Grid.RowSpan="2">
+            <StackPanel>
+                <Border Style="{StaticResource SubPanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="STATUS" Style="{StaticResource TitleTextStyle}"/>
+                        <TextBlock Text="{Binding ConnectionStatus}" Foreground="{StaticResource TextForegroundBrush}" FontSize="16" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SubPanelStyle}" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="CONTROL PANEL" Style="{StaticResource TitleTextStyle}"/>
+
+                        <StackPanel Visibility="{Binding IsInSetupMode, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                            <Button Style="{StaticResource StartButtonStyle}" Command="{Binding StartExplorationCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M10,16.5V7.5L16,12M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                    <TextBlock Text=" Start Exploration" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource StopButtonStyle}" Command="{Binding EmergencyStopCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M9,9H15V15H9V9Z" Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                    <TextBlock Text=" Emergency Stop" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource ResetButtonStyle}" Command="{Binding ResetMapCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,5V1L7,6L12,11V8C15.31,8 18,10.69 18,14C18,17.31 15.31,20 12,20C8.69,20 6,17.31 6,14H4C4,18.42 7.58,22 12,22C16.42,22 20,18.42 20,14C20,9.58 16.42,6 12,6V5Z" Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                    <TextBlock Text=" Reset Map" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource CalibrateButtonStyle}" Command="{Binding StartCalibrationCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M19.35,10.04C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.04C2.34,8.36 0,10.91 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.04M19,18H6A4,4 0 0,1 2,14C2,11.69 3.79,9.8 6,9.81V9.77C6,9.76 6,9.76 6,9.75C6.3,6.85 8.92,4.72 12,5A7,7 0 0,1 19,12H19.5A2.5,2.5 0 0,1 22,14.5A2.5,2.5 0 0,1 19.5,17H19V18Z" Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                    <TextBlock Text=" Calibrate Camera" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource PerspectiveButtonStyle}" Command="{Binding StartPerspectiveSetupCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,2.5L8,7H16L12,2.5M12,21.5L16,17H8L12,21.5M4.5,9L9,13V9H4.5M19.5,15L15,11V15H19.5Z" Fill="White" Width="14" Height="14" Stretch="Uniform"/>
+                                    <TextBlock Text=" Set Perspective" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <CheckBox IsChecked="{Binding IsLedOn, Mode=TwoWay}" Content="Onboard LED" Foreground="White" Margin="0,15,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding IsInCalibrationMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Calibration Mode Active" Foreground="Orange" FontWeight="Bold" Margin="0,10,0,0"/>
+                            <TextBlock Text="Show the chessboard to the camera from different angles." TextWrapping="Wrap" Foreground="Gray"/>
+                            <Button Style="{StaticResource ControlButtonBaseStyle}" Background="{StaticResource ButtonBlueBrush}" Margin="0,10,0,0" Command="{Binding CaptureCalibrationImageCommand}" Content="Capture Image"/>
+                            <Button Style="{StaticResource StartButtonStyle}" Command="{Binding FinishCalibrationCommand}" Content="Finish &amp; Save Calibration"/>
+                            <Button Style="{StaticResource CancelButtonStyle}" Command="{Binding CancelSetupCommand}" Content="Cancel"/>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding IsInPerspectiveSetupMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Perspective Setup Active" Foreground="Aqua" FontWeight="Bold" Margin="0,10,0,0"/>
+                            <TextBlock Text="{Binding PerspectiveSetupInstructions}" TextWrapping="Wrap" Foreground="Gray"/>
+                            <Button Style="{StaticResource StartButtonStyle}" Command="{Binding FinishPerspectiveSetupCommand}" Content="Finish &amp; Save Perspective"/>
+                            <Button Style="{StaticResource CancelButtonStyle}" Command="{Binding CancelSetupCommand}" Content="Cancel"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SubPanelStyle}" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="INTERACTIVE MINI-MAP" Style="{StaticResource TitleTextStyle}"/>
+
+                        <Grid Height="40" Margin="0,5,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="▲" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding RobotHeading, Converter={StaticResource HeadingToColorConverter}, ConverterParameter='up'}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="◄" FontSize="16" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{Binding RobotHeading, Converter={StaticResource HeadingToColorConverter}, ConverterParameter='left'}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="►" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Foreground="{Binding RobotHeading, Converter={StaticResource HeadingToColorConverter}, ConverterParameter='right'}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="▼" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding RobotHeading, Converter={StaticResource HeadingToColorConverter}, ConverterParameter='down'}"/>
+                        </Grid>
+
+                        <Border Height="300" Background="#10161a" Margin="0,5,0,0" ClipToBounds="True">
+                            <Grid>
+                                <ItemsControl ItemsSource="{Binding Edges}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y}" X2="{Binding EndPoint.X}" Y2="{Binding EndPoint.Y}" Stroke="{Binding StrokeColor}" StrokeThickness="{Binding StrokeThickness}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding Nodes}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Canvas.Left" Value="{Binding X, Converter={StaticResource CenterConverter}, ConverterParameter=20}"/>
+                                            <Setter Property="Canvas.Top" Value="{Binding Y, Converter={StaticResource CenterConverter}, ConverterParameter=20}"/>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ToolTip="{Binding Id}">
+                                                <Button Command="{Binding SelectNodeCommand}">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Ellipse Width="20" Height="20" Fill="{Binding FillColor}" Stroke="White" StrokeThickness="1.5"/>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                                <TextBlock Text="{Binding Id}" IsHitTestVisible="False" Foreground="White" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Border>
+                        <TextBlock Text="Click a node on the map to set a target." FontSize="11" Foreground="{StaticResource GrayTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

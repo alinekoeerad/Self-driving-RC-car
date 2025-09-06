@@ -1,0 +1,275 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\uni\\Final Version\\Controller\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\common\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:common\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\common\\relaycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:common\\relaycommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\models\\pythondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:models\\pythondata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\communication\\pythoncommunicator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:communication\\pythoncommunicator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\viewmodels\\nodeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:viewmodels\\nodeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:views\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:views\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\viewmodels\\logentryviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:viewmodels\\logentryviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\common\\headingtocolorconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:common\\headingtocolorconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\viewmodels\\edgeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:viewmodels\\edgeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\controller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:controller.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\common\\centerconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:common\\centerconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\common\\booleantovisibilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:common\\booleantovisibilityconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|e:\\uni\\final version\\controller\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{BF2E4EFC-0DE4-408E-85BB-3E5352267F7D}|Controller.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "HeadingToColorConverter.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Common\\HeadingToColorConverter.cs",
+              "RelativeDocumentMoniker": "Common\\HeadingToColorConverter.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Common\\HeadingToColorConverter.cs",
+              "RelativeToolTip": "Common\\HeadingToColorConverter.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAADwvx4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T13:14:59.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PythonCommunicator.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\communication\\PythonCommunicator.cs",
+              "RelativeDocumentMoniker": "communication\\PythonCommunicator.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\communication\\PythonCommunicator.cs",
+              "RelativeToolTip": "communication\\PythonCommunicator.cs",
+              "ViewState": "AgIAAIkAAAAAAAAAAAAUwKQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T14:53:44.608Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Controller.csproj",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Controller.csproj",
+              "RelativeDocumentMoniker": "Controller.csproj",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Controller.csproj",
+              "RelativeToolTip": "Controller.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-12T14:52:15.1Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "BooleanToVisibilityConverter.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Common\\BooleanToVisibilityConverter.cs",
+              "RelativeDocumentMoniker": "Common\\BooleanToVisibilityConverter.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Common\\BooleanToVisibilityConverter.cs",
+              "RelativeToolTip": "Common\\BooleanToVisibilityConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T21:26:34.399Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\App.xaml.cs",
+              "RelativeDocumentMoniker": "App.xaml.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\App.xaml.cs",
+              "RelativeToolTip": "App.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:52:31.142Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "App.xaml",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-08-06T14:52:22.112Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Views\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\MainWindow.xaml.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Views\\MainWindow.xaml.cs",
+              "RelativeToolTip": "Views\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvx8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:52:12.466Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PythonData.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Models\\PythonData.cs",
+              "RelativeDocumentMoniker": "Models\\PythonData.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Models\\PythonData.cs",
+              "RelativeToolTip": "Models\\PythonData.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAkwDYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:50:52.005Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CenterConverter.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Common\\CenterConverter.cs",
+              "RelativeDocumentMoniker": "Common\\CenterConverter.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Common\\CenterConverter.cs",
+              "RelativeToolTip": "Common\\CenterConverter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:49:53.797Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RelayCommand.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Common\\RelayCommand.cs",
+              "RelativeDocumentMoniker": "Common\\RelayCommand.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Common\\RelayCommand.cs",
+              "RelativeToolTip": "Common\\RelayCommand.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAwwBoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:50:31.66Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Common\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "Common\\ViewModelBase.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Common\\ViewModelBase.cs",
+              "RelativeToolTip": "Common\\ViewModelBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:50:13.24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NodeViewModel.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\ViewModels\\NodeViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\NodeViewModel.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\ViewModels\\NodeViewModel.cs",
+              "RelativeToolTip": "ViewModels\\NodeViewModel.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA7wCYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:47:45.479Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EdgeViewModel.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\ViewModels\\EdgeViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\EdgeViewModel.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\ViewModels\\EdgeViewModel.cs",
+              "RelativeToolTip": "ViewModels\\EdgeViewModel.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAkwBkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:47:43.752Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LogEntryViewModel.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\ViewModels\\LogEntryViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\LogEntryViewModel.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\ViewModels\\LogEntryViewModel.cs",
+              "RelativeToolTip": "ViewModels\\LogEntryViewModel.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAswBwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:47:43.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainWindowViewModel.cs",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\MainWindowViewModel.cs",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeToolTip": "ViewModels\\MainWindowViewModel.cs",
+              "ViewState": "AgIAADsBAAAAAAAAAADwv1QBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-06T14:47:40.174Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "E:\\uni\\Final Version\\Controller\\Views\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "Views\\MainWindow.xaml",
+              "ToolTip": "E:\\uni\\Final Version\\Controller\\Views\\MainWindow.xaml",
+              "RelativeToolTip": "Views\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-08-06T14:47:28.097Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
