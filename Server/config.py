@@ -1,7 +1,7 @@
 # config.py
 
 # ⚙️ Network Settings
-ESP32_STREAM_URL = "http://192.168.137.104:81/stream"  # TODO: IP address of your ESP32 camera
+ESP32_STREAM_URL = "http://192.168.137.76:81/stream"  # TODO: IP address of your ESP32 camera
 CSHARP_HOST = '127.0.0.1'
 CSHARP_DATA_PORT = 9998
 CSHARP_COMMAND_PORT = 9999
@@ -16,7 +16,7 @@ LINE_THRESHOLD_MIN = 100
 LINE_THRESHOLD_MAX = 255
 
 # 🤖 Robot Settings
-ROBOT_DEFAULT_SPEED = 150 # Default robot movement speed
+ROBOT_DEFAULT_SPEED = 190 # Default robot movement speed
 ROBOT_TURN_SPEED = 120    # Robot speed when turning
 
 # 🖥️ Simulation and Debug Settings

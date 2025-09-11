@@ -1,5 +1,3 @@
-# logic/robot_controller.py
-
 import base64
 import math
 import cv2
@@ -22,7 +20,7 @@ class RobotController:
         # <<< ADDED: Variables for motion calibration >>>
         self.motion_calib_state = {'sub_state': 'idle'}
         # Default high values, will be overwritten by calibration
-        self.calibrated_turn_frames = {"left_360": 500, "right_360": 500}
+        self.calibrated_turn_frames = {"left_360": 120, "right_360": 120}
         self._load_motion_calibration_data() # Load saved values on startup
         
         self.graph_manager = graph_manager
@@ -221,97 +219,6 @@ class RobotController:
             else:
                 print(f"❌ Could not calculate path to {target_id}.")
 
-# In logic/robot_controller.py
-
-    # <<< This is the complete, updated version of the process_frame function >>>
-# In logic/robot_controller.py
-
-    # def process_frame(self, raw_frame: np.ndarray):
-    #     log_message = f"State: {self.state}"
-        
-    #     # --- 1. Handle Special Setup Modes First ---
-    #     if self.state == "CALIBRATING":
-    #         found, calib_frame = self.calibrator.check_chessboard(raw_frame.copy())
-    #         self.last_calib_check_success = found
-    #         self.processed_frame = calib_frame
-    #         log_message = "Point camera at chessboard. Ready to capture." if found else "Chessboard not found."
-    #         self._send_csharp_update(log_message)
-    #         return
-
-    #     elif self.state == "PERSPECTIVE_SETUP":
-    #         try:
-    #             undistorted_frame = self.image_processor.undistort_frame(raw_frame)
-    #             self.processed_frame = undistorted_frame
-    #         except Exception:
-    #             self.processed_frame = raw_frame # Failsafe
-    #         log_message = f"Click points on C# UI. {len(self.transformer.points)}/4 points selected."
-    #         self._send_csharp_update(log_message)
-    #         return
-
-    #     # --- 2. Main Operational Logic ---
-    #     corrected_frame = self.image_processor.process_and_correct_frame(raw_frame)
-        
-    #     if corrected_frame is not None:
-    #         # --- 3. Initialize variables for this frame ---
-    #         line_info = None
-    #         intersection_result = None
-    #         node_info = self.image_processor.detect_node_in_roi(corrected_frame)
-    #         (detected_node_id, _) = node_info
-
-    #         # --- 4. Execute State-Specific Logic (The Main State Machine) ---
-    #         if self.state == "MOTION_CALIBRATION":
-    #             log_message = self._handle_motion_calibration_state(detected_node_id)
-    #             self.processed_frame = self.image_processor.draw_diagnostics(
-    #                 frame=corrected_frame, line_info=None, node_info=node_info, intersection_analysis=None
-    #             )
-            
-    #         elif self.state in ["TURNING", "TURNING_AROUND"]:
-    #             turn_direction = self.turn_logic_state.get("direction", "LEFT").upper()
-    #             line_info = self.image_processor.calculate_line_command(corrected_frame, focus_area=turn_direction)
-    #             log_message = self._handle_turning_state(line_info)
-    #             self.processed_frame = self.image_processor.draw_diagnostics(
-    #                 frame=corrected_frame, line_info=line_info, node_info=node_info, intersection_analysis=None
-    #             )
-            
-    #         else: # All other operational states
-    #             line_info = self.image_processor.calculate_line_command(corrected_frame)
-
-    #             if self.state == "AT_NODE":
-    #                 intersection_result = self.image_processor.analyze_intersection(corrected_frame)
-    #             if self.state == "IDLE":
-    #                 log_message = self._handle_idle_state()
-    #             elif self.state == "INITIAL_SEARCH":
-    #                 log_message = self._handle_initial_search_state(line_info, detected_node_id)
-    #             elif self.state == "EXPLORING_PATH" or self.state == "MAPPING_PATH":
-    #                 log_message = self._handle_exploring_path_state(line_info, detected_node_id)
-    #             elif self.state == "PATHFINDING":
-    #                 log_message = self._handle_pathfinding_state(line_info, detected_node_id)
-    #             elif self.state == "AWAITING_DRIVE":
-    #                 log_message = self._handle_awaiting_drive_state()
-    #             elif self.state == "APPROACHING_NODE":
-    #                 log_message = self._handle_approaching_node()
-    #             elif self.state == "AT_NODE":
-    #                 log_message = self._handle_at_node_state(intersection_result)
-    #             elif self.state == "CENTERING_AT_NODE":
-    #                 log_message = self._handle_centering_at_node_state()
-    #             elif self.state == "DEPARTING_NODE":
-    #                 log_message = self._handle_departing_node_state()
-
-    #             self.processed_frame = self.image_processor.draw_diagnostics(
-    #                 frame=corrected_frame,
-    #                 line_info=line_info,
-    #                 node_info=node_info,
-    #                 intersection_analysis=intersection_result
-    #             )
-    #     else:
-    #         self.processed_frame = raw_frame
-    #         log_message = "Graceful fallback: Using raw frame due to correction failure."
-
-        # # --- 5. Send Final Update to C# ---
-        # self._send_csharp_update(log_message)
-
-    # In logic/robot_controller.py
-    # <<< REPLACE the existing process_frame function with this FINAL, CORRECTED version >>>
     def process_frame(self, raw_frame: np.ndarray):
         log_message = f"State: {self.state}"
         
@@ -349,7 +256,8 @@ class RobotController:
             # --- 4. Priority Check: Handle Node Arrival FIRST ---
             # This block checks if we've arrived at a new node and decides what to do
             # based on the CURRENT state (Pathfinding vs. Exploring).
-            MIN_FRAMES_BEFORE_NODE_DETECTION = 20
+            # MIN_FRAMES_BEFORE_NODE_DETECTION = 20
+            MIN_FRAMES_BEFORE_NODE_DETECTION = 15
             if node_id_str and node_id_str != self.last_node_id and self.frame_counter > MIN_FRAMES_BEFORE_NODE_DETECTION:
                 
                 # If we are PATHFINDING, we are just passing through.
@@ -531,10 +439,14 @@ class RobotController:
             if exits:
                 frontiers.append(node_id)
         return frontiers
-    
+    # In logic/robot_controller.py
+# <<< REPLACE the existing _handle_initial_search_state function with this new version >>>
+
     def _handle_initial_search_state(self, line_info: dict | None, detected_node_id: int | None):
         """
         Handles the logic for finding the starting point on the map.
+        This version is modified to use a gentle swing turn for searching,
+        reserving the pivot turn only for dead-ends.
         """
         if detected_node_id is not None:
             self.robot_comm.set_drive_command("STOP", None)
@@ -545,13 +457,11 @@ class RobotController:
             self.revisit_count[node_id] += 1
             self.frame_counter = 0
             self.is_node_analyzed = False 
-            # <<< CHANGED >>>
             self._set_state("AT_NODE", f"Priority 1 (Initial Search): Found starting node {node_id}.")
             return f"✅ Starting at Node {node_id}. Preparing for analysis..."
 
         elif line_info is not None:
             self.next_state_after_await = "EXPLORING_PATH"
-            # <<< CHANGED >>>
             self._set_state("AWAITING_DRIVE", "Priority 2 (Initial Search): Found initial line.")
             return "Found initial line. Starting exploration..."
 
@@ -562,9 +472,14 @@ class RobotController:
                 self.robot_comm.set_drive_command("STOP", None)
                 return f"⚠️ No line or node detected. Scanning... ({self.initial_search_frame_counter}/{SEARCH_PATIENCE_FRAMES})"
             else:
-                self.robot_comm.set_drive_command("LEFT", None)
-                return "⚠️ Still no line or node. Turning to search."
-            
+                # --- THIS IS THE FIX ---
+                # Use a gentle swing turn for searching instead of a pivot turn.
+                SEARCH_TURN_SPEED = 190
+                search_payload = {"left": 0, "right": SEARCH_TURN_SPEED}
+                self.robot_comm.set_drive_command("DRIVE", search_payload)
+                # --- END OF THE FIX ---
+                return "⚠️ Still no line or node. Turning gently to search."
+                    
     def _handle_awaiting_drive_state(self):
         """
         A simple state that waits for a few frames before transitioning.
@@ -583,86 +498,6 @@ class RobotController:
             self.frame_counter = 0
             return "Starting to explore new path."
             
-    def _handle_exploring_path_state(self, line_info: dict | None, detected_node_id: int | None):
-        MIN_FRAMES_BEFORE_NODE_DETECTION = 20
-
-        node_id_str = f"N{detected_node_id}" if detected_node_id is not None else None
-        
-        # --- Priority 1: A new node is detected ---
-        if node_id_str and node_id_str != self.last_node_id and self.frame_counter > MIN_FRAMES_BEFORE_NODE_DETECTION:
-            self.robot_comm.set_drive_command("STOP", None)
-            self.node_approach_data = {"node_id": node_id_str}
-            self._set_state("AT_NODE", f"Node {node_id_str} sighted after {self.frame_counter} frames. Stopped for analysis.")
-            return f"Arrived at {node_id_str}. Preparing for analysis."
-
-        # --- Priority 2: A line is visible, so follow it ---
-        if line_info:
-            self.no_line_frame_count = 0
-            positional_error = line_info.get("positional_error", 0)
-            angle_error = line_info.get("angle_error", 0)
-
-            steering_correction = 0.0
-            CENTER_THRESHOLD = 45
-            OUTER_THRESHOLD = 75
-            
-            if abs(positional_error) > OUTER_THRESHOLD:
-                Kp_strong = 1.8
-                steering_correction = Kp_strong * positional_error
-            elif abs(positional_error) > CENTER_THRESHOLD:
-                Kp_normal = 1.0
-                steering_correction = Kp_normal * positional_error
-            else:
-                Ka = 2.8
-                steering_correction = Ka * angle_error
-
-            MAX_SPEED = 255
-            left_speed = MAX_SPEED
-            right_speed = MAX_SPEED
-            
-            if steering_correction > 0: 
-                right_speed -= steering_correction
-            elif steering_correction < 0:
-                left_speed += steering_correction
-
-            left_speed = max(0, min(MAX_SPEED, int(left_speed)))
-            right_speed = max(0, min(MAX_SPEED, int(right_speed)))
-        
-            command_payload = {"left": left_speed, "right": right_speed}
-            self.robot_comm.set_drive_command("DRIVE", command_payload)
-            
-            if positional_error < -15: self.last_known_line_direction = "LEFT"
-            elif positional_error > 15: self.last_known_line_direction = "RIGHT"
-            
-            self.frame_counter += 1
-            return f"Exploring... PosErr:{positional_error}, AngErr:{angle_error:.1f} -> L:{left_speed}, R:{right_speed}"
-        
-        # --- Priority 3: The line has been lost ---
-        else:
-            self.no_line_frame_count += 1
-            if self.no_line_frame_count > 30:
-                # <<< CHANGED SECTION: Logic to remember the dead end >>>
-                
-                # 1. Identify which exit from the last node led to this dead end
-                exit_direction = self.turn_state.get('direction', 'unknown')
-                
-                # 2. If the exit is known, add it to the dead-end memory for that node
-                if self.last_node_id and exit_direction != 'unknown':
-                    self.dead_end_exits[self.last_node_id].add(exit_direction)
-                    print(f"🧠 MEMORY: Exit '{exit_direction}' from node {self.last_node_id} is now marked as a dead end.")
-                
-                # 3. Always perform a 180-degree turn at a dead end
-                self._initiate_turn('around')
-                self._set_state("TURNING_AROUND", f"Line lost for {self.no_line_frame_count} frames (Dead-end).")
-                self.no_line_frame_count = 0
-                return f"⚠️ Dead-end! Turning around."
-                # <<< END CHANGED SECTION >>>
-            else:
-                self.robot_comm.set_drive_command("STOP", None)
-                return f"Line lost, stopping... ({self.no_line_frame_count}/30)"
-            
-    # In logic/robot_controller.py
-    # In logic/robot_controller.py
-    # <<< REPLACE the existing _decide_next_exploration_target function with this FINAL, COMPLETE version >>>
     def _decide_next_exploration_target(self):
         """
         Decides the next best target. THIS IS THE FINAL VERSION that correctly calculates
@@ -765,13 +600,14 @@ class RobotController:
             else:
                 self._set_state("IDLE", "Exploration complete. No path to remaining frontiers.")
                 return "❌ No path found to any remaining frontiers. Exploration finished."
-                                        
-    # <<< ADD THIS NEW FUNCTION >>>
+          # In logic/robot_controller.py
+
+    # <<< REPLACE the existing _handle_departing_node_state function with this new version >>>
     def _handle_departing_node_state(self):
         """
         Moves the robot forward for a fixed number of frames to ensure it has
-        physically left the current node's area before starting to explore.
-        This is an open-loop action, ignoring camera input for node detection.
+        physically left the current node's area. This version is now aware of
+        whether the robot is exploring or pathfinding.
         """
         DEPART_FRAMES = 50  # Move forward for 50 frames (approx 1.5-2 seconds)
 
@@ -780,12 +616,20 @@ class RobotController:
             self.departing_frame_counter += 1
             return f"Departing node... ({self.departing_frame_counter}/{DEPART_FRAMES})"
         else:
-            # Finished departing, now we can safely start exploring the path
-            self.frame_counter = 0  # Reset the main counter for the new path's cost
-            self.is_node_analyzed = False # <<< ADD THIS LINE
-            self._set_state("EXPLORING_PATH", "Finished fixed-frame departure.")
-            return "Exploring new path..."
-        
+            # Finished departing, reset counters and decide the next state based on the mission.
+            self.frame_counter = 0
+            self.is_node_analyzed = False
+            
+            # --- THIS IS THE FIX ---
+            # Check if a navigation path exists. If so, we are pathfinding.
+            if self.navigation_path:
+                self._set_state("PATHFINDING", "Finished departure, continuing on the calculated path.")
+                return "Continuing on calculated path..."
+            # Otherwise, we are exploring a new frontier.
+            else:
+                self._set_state("EXPLORING_PATH", "Finished departure, exploring new frontier.")
+                return "Exploring new path..."
+            
     # <<< ADD these two new functions to the RobotController class >>>
     def _load_motion_calibration_data(self, filename="motion_calibration.yml"):
         try:
@@ -1084,111 +928,6 @@ class RobotController:
             # Re-use the standard line-following logic from the exploration state
             return self._handle_exploring_path_state(line_info, detected_node_id)
         
-    # In logic/robot_controller.py
-    # <<< REPLACE the existing _initiate_turn function with this new version >>>
-    def _initiate_turn(self, direction: str, target_heading: float = None):
-        """
-        Initiates a turn, setting the phase correctly to 'BLIND_TURN' for the handler.
-        If a precise target_heading is provided, it uses that for accuracy.
-        """
-        # 1. Update robot's logical heading
-        if target_heading is not None:
-            self.robot_heading = target_heading
-        else:
-            # Fallback for non-pathfinding turns
-            if direction == "left": self.robot_heading -= 90
-            elif direction == "right": self.robot_heading += 90
-            elif direction == "around": self.robot_heading += 180
-
-        # Normalize heading
-        if self.robot_heading > 180: self.robot_heading -= 360
-        if self.robot_heading <= -180: self.robot_heading += 360
-        print(f"🔄 Robot heading updated to: {self.robot_heading:.1f} degrees.")
-
-        # 2. Determine physical turn command and duration
-        turn_command_map = {"left": "LEFT", "right": "RIGHT", "around": "LEFT"}
-        turn_duration_map = {
-            "left": self.calibrated_turn_frames.get('left_360', 300) // 4,
-            "right": self.calibrated_turn_frames.get('right_360', 300) // 4,
-            "around": self.calibrated_turn_frames.get('left_360', 300) // 2
-        }
-        
-        if direction == "around" and self.last_known_line_direction == "RIGHT":
-            turn_command_map["around"] = "RIGHT"
-            turn_duration_map["around"] = self.calibrated_turn_frames.get('right_360', 300) // 2
-
-        turn_cmd = turn_command_map.get(direction, "LEFT")
-        turn_goal_frames = turn_duration_map.get(direction, 100)
-
-        # 3. Initialize the state machine for the turn with the CORRECT phase name
-        self.turn_logic_state = {
-            "phase": "BLIND_TURN",
-            "frame_counter": 0,
-            "align_frame_counter": 0,
-            "confirmation_counter": 0,
-            "turn_goal_frames": turn_goal_frames,
-            "direction": turn_cmd
-        }
-        print(f"Initiating calibrated turn: {turn_cmd} for {turn_goal_frames} frames.")
-
-    # In logic/robot_controller.py
-    # <<< REPLACE the existing _handle_turning_state function with this new version >>>
-    def _handle_turning_state(self, line_info: dict | None):
-        """
-        Handles the improved, multi-phase turning process. It expects 'BLIND_TURN'
-        and 'ALIGN' phases from the _initiate_turn function.
-        """
-        turn_logic = self.turn_logic_state
-        turn_cmd = turn_logic.get("direction", "LEFT")
-        CONFIRMATION_GOAL = 5
-        ALIGN_TIMEOUT_FRAMES = self.calibrated_turn_frames.get('right_360', 300) // 2
-
-        # --- Phase 1: BLIND_TURN ---
-        if turn_logic.get("phase") == "BLIND_TURN":
-            self.robot_comm.set_drive_command(turn_cmd, None)
-            turn_logic["frame_counter"] += 1
-            
-            if turn_logic["frame_counter"] >= turn_logic["turn_goal_frames"]:
-                turn_logic["phase"] = "ALIGN"
-                print("DEBUG (Turn): Calibrated blind turn complete. Now aligning with vision.")
-            
-            return f"Turning (Blind Phase)... {turn_logic['frame_counter']}/{turn_logic['turn_goal_frames']}"
-
-        # --- Phase 2: ALIGN ---
-        elif turn_logic.get("phase") == "ALIGN":
-            turn_logic['align_frame_counter'] += 1
-
-            if turn_logic['align_frame_counter'] > ALIGN_TIMEOUT_FRAMES:
-                print(f"❌ TURN FAILED: Timeout reached after {ALIGN_TIMEOUT_FRAMES} frames.")
-                self.robot_comm.set_drive_command("STOP", None)
-                self._set_state("IDLE", "Turn failed due to timeout.")
-                return "ERROR: Turn timed out."
-
-            if line_info:
-                turn_logic["confirmation_counter"] += 1
-            else:
-                turn_logic["confirmation_counter"] = 0
-            
-            if turn_logic["confirmation_counter"] >= CONFIRMATION_GOAL:
-                print("✅ Turn successful: Line re-acquired and confirmed.")
-                self.robot_comm.set_drive_command("STOP", None)
-                
-                next_state = self.turn_state.get('next_state_after_turn', "DEPARTING_NODE")
-                if next_state == "DEPARTING_NODE":
-                    self.departing_frame_counter = 0
-
-                self._set_state(next_state, "Turn complete with confirmation.")
-                self.turn_logic_state = {}
-                return "Turn complete. Now departing."
-            
-            else:
-                self.robot_comm.set_drive_command(turn_cmd, None)
-                return f"Turning (Align Phase)... Searching [{turn_logic['confirmation_counter']}/{CONFIRMATION_GOAL}]"
-
-        # Failsafe for an unknown state
-        self._set_state("IDLE", "ERROR: Unknown turn phase.")
-        return "ERROR: Unknown turn phase. Stopping."
-        
 # ADD THIS NEW HELPER FUNCTION
     def _log_decision_details_at_node(self, node_id, raw_analysis_results, stable_exits, explored_exits, final_unexplored_exits):
         """
@@ -1264,9 +1003,9 @@ class RobotController:
             global_exits.add(global_dir_name)
             
         return global_exits
-    
     # In logic/robot_controller.py
-    # <<< REPLACE the existing _handle_at_node_state function with this FINAL, CORRECTED version >>>
+# In logic/robot_controller.py
+
     def _handle_at_node_state(self, intersection_info: dict | None):
         """
         Handles all logic at a node. This final version uses a DYNAMIC approach
@@ -1337,10 +1076,8 @@ class RobotController:
                 if hashable_results:
                     stable_local_physical_exits = set(Counter(hashable_results).most_common(1)[0][0])
             
-            # <<< --- START OF THE CRITICAL FIX --- >>>
             # 2. Transform local exits to GLOBAL exits using the robot's heading
             stable_global_physical_exits = self._transform_local_exits_to_global(stable_local_physical_exits)
-            # <<< ---  END OF THE CRITICAL FIX  --- >>>
 
             # 3. Get already explored GLOBAL exits from memory
             explored_exits = set()
@@ -1374,7 +1111,7 @@ class RobotController:
             self.is_node_analyzed = False
             
             return f"Node analysis complete for {self.current_node_id}. {decision_log}"
-        
+                
     # In vision/image_processor.py
     # <<< REPLACE the existing analyze_intersection function with this new version >>>
     def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
@@ -1456,13 +1193,17 @@ class RobotController:
         # <<< ---  END OF THE LOGIC FIX  --- >>>
 
         return {"type": node_type, "exits": exits}
-    
-
-    # ADD THIS NEW OPTIMIZATION FUNCTION
+  
+# In logic/robot_controller.py
+    # =================================================================================
+    # START OF THE FIX: REPLACE the existing _remotely_update_source_node_status function
+    # =================================================================================
     def _remotely_update_source_node_status(self):
         """
         Remotely updates the 'unexplored_exits' list of the previous node
         after successfully traversing an edge. This prevents unnecessary backtracking.
+        This version is more robust and uses a try-except block to handle potential
+        mismatches between geometric and vision-based exit names.
         """
         # Ensure we have a valid last node and current node
         if not self.last_node_id or not self.current_node_id:
@@ -1476,12 +1217,21 @@ class RobotController:
         # Find out which exit we took from the last node to get here
         exit_from_last_node = edge_data.get('exit_from_A')
 
+        # --- THIS IS THE FIX ---
+        # Instead of checking if the exit exists before removing, we directly try to remove it.
+        # This is more robust against small mismatches (e.g., from vision vs. geometry).
         if exit_from_last_node and self.last_node_id in self.unexplored_exits:
-            # If the exit we just took is in the "to-do list" of the previous node, remove it
-            if exit_from_last_node in self.unexplored_exits[self.last_node_id]:
+            try:
                 self.unexplored_exits[self.last_node_id].remove(exit_from_last_node)
                 print(f"🧠 REMOTE UPDATE: Removed exit '{exit_from_last_node}' from node {self.last_node_id}'s to-do list.")
-
+            except ValueError:
+                # This block catches the error if .remove() is called on a list for an item that doesn't exist.
+                # This can happen if the geometrically calculated exit name doesn't perfectly match
+                # the name from the vision analysis phase. This acts as a failsafe.
+                print(f"⚠️ REMOTE UPDATE WARNING: Tried to remove exit '{exit_from_last_node}' from {self.last_node_id}, but it wasn't in the to-do list: {self.unexplored_exits[self.last_node_id]}")
+    # =================================================================================
+    # END OF THE FIX
+    # =================================================================================
 
     # In logic/robot_controller.py
     # <<< ADD THIS ENTIRE NEW FUNCTION to the RobotController class >>>
@@ -1490,7 +1240,7 @@ class RobotController:
         Handles the "creep forward" action. This UPDATED version uses the
         precise turning information calculated by the decision function.
         """
-        CENTERING_FRAMES = 20
+        CENTERING_FRAMES = 0
 
         if self.centering_state_data['frame_counter'] < CENTERING_FRAMES:
             self.robot_comm.set_drive_command("FORWARD", None)
@@ -1510,3 +1260,311 @@ class RobotController:
                 # Failsafe
                 self._set_state("IDLE", "Error: Lost turn direction after centering.")
                 return "Error: Could not initiate turn."
+
+    def _handle_exploring_path_state(self, line_info: dict | None, detected_node_id: int | None):
+        MIN_FRAMES_BEFORE_NODE_DETECTION = 15
+
+
+        node_id_str = f"N{detected_node_id}" if detected_node_id is not None else None
+        
+        # --- Priority 1: A new node is detected ---
+        if node_id_str and node_id_str != self.last_node_id and self.frame_counter > MIN_FRAMES_BEFORE_NODE_DETECTION:
+            self.robot_comm.set_drive_command("STOP", None)
+            self.node_approach_data = {"node_id": node_id_str}
+            self._set_state("AT_NODE", f"Node {node_id_str} sighted after {self.frame_counter} frames. Stopped for analysis.")
+            return f"Arrived at {node_id_str}. Preparing for analysis."
+
+        # --- Priority 2: A line is visible, so follow it ---
+        if line_info:
+            self.no_line_frame_count = 0
+            positional_error = line_info.get("positional_error", 0)
+            angle_error = line_info.get("angle_error", 0)
+
+            steering_correction = 0.0
+            CENTER_THRESHOLD = 45
+            OUTER_THRESHOLD = 75
+            
+            if abs(positional_error) > OUTER_THRESHOLD:
+                Kp_strong = 1.8
+                steering_correction = Kp_strong * positional_error
+            elif abs(positional_error) > CENTER_THRESHOLD:
+                Kp_normal = 1.0
+                steering_correction = Kp_normal * positional_error
+            else:
+                Ka = 2.8
+                steering_correction = Ka * angle_error
+
+            MAX_SPEED = 190
+            left_speed = MAX_SPEED
+            right_speed = MAX_SPEED
+            
+            if steering_correction > 0: 
+                right_speed -= steering_correction
+            elif steering_correction < 0:
+                left_speed += steering_correction
+
+            left_speed = max(0, min(MAX_SPEED, int(left_speed)))
+            right_speed = max(0, min(MAX_SPEED, int(right_speed)))
+        
+            command_payload = {"left": left_speed, "right": right_speed}
+            self.robot_comm.set_drive_command("DRIVE", command_payload)
+            
+            if positional_error < -15: self.last_known_line_direction = "LEFT"
+            elif positional_error > 15: self.last_known_line_direction = "RIGHT"
+            
+            self.frame_counter += 1
+            return f"Exploring... PosErr:{positional_error}, AngErr:{angle_error:.1f} -> L:{left_speed}, R:{right_speed}"
+        
+        # --- Priority 3: The line has been lost ---
+        else:
+            self.no_line_frame_count += 1
+            if self.no_line_frame_count > 30:
+                # <<< CHANGED SECTION: Logic to remember the dead end >>>
+                
+                # 1. Identify which exit from the last node led to this dead end
+                exit_direction = self.turn_state.get('direction', 'unknown')
+                
+                # 2. If the exit is known, add it to the dead-end memory for that node
+                if self.last_node_id and exit_direction != 'unknown':
+                    self.dead_end_exits[self.last_node_id].add(exit_direction)
+                    print(f"🧠 MEMORY: Exit '{exit_direction}' from node {self.last_node_id} is now marked as a dead end.")
+                
+                # 3. Always perform a 180-degree turn at a dead end
+                self._initiate_turn('around')
+                self._set_state("TURNING_AROUND", f"Line lost for {self.no_line_frame_count} frames (Dead-end).")
+                self.no_line_frame_count = 0
+                return f"⚠️ Dead-end! Turning around."
+                # <<< END CHANGED SECTION >>>
+            else:
+                self.robot_comm.set_drive_command("STOP", None)
+                return f"Line lost, stopping... ({self.no_line_frame_count}/30)"
+
+
+# In logic/robot_controller.py
+# <<< REPLACE the existing _initiate_turn function with this new version >>>
+
+    # def _initiate_turn(self, direction: str, target_heading: float = None):
+    #     """
+    #     Initiates a turn. This version is modified so that ALL turns, including
+    #     the 180-degree 'around' turn, use a more stable swing turn mechanism
+    #     instead of a pivot turn, preventing the use of the "initial search" turn style at nodes.
+    #     """
+    #     # 1. Update robot's logical heading (No changes here)
+    #     if target_heading is not None:
+    #         self.robot_heading = target_heading
+    #     else:
+    #         if direction == "left": self.robot_heading -= 90
+    #         elif direction == "right": self.robot_heading += 90
+    #         elif direction == "around": self.robot_heading += 180
+
+    #     if self.robot_heading > 180: self.robot_heading -= 360
+    #     if self.robot_heading <= -180: self.robot_heading += 360
+    #     print(f"🔄 Robot heading updated to: {self.robot_heading:.1f} degrees.")
+
+    #     # --- START OF THE MODIFIED LOGIC ---
+
+    #     # 2. Determine physical turn command, payload, and duration for ALL turns
+        
+    #     turn_cmd = "DRIVE"  # All turns will now use the DRIVE command for consistency
+    #     turn_payload = None
+    #     turn_goal_frames = 40 # Default value
+    #     TURN_SPEED = 220     # The speed of the moving wheel during a swing turn
+        
+    #     # --- Logic for 90-degree turns ---
+    #     if direction == "left":
+    #         print(f"Executing SWING turn for direction: {direction}")
+    #         turn_payload = {"left": 0, "right": TURN_SPEED}
+    #         turn_goal_frames = self.calibrated_turn_frames.get('left_360', 100) // 4
+
+    #     elif direction == "right":
+    #         print(f"Executing SWING turn for direction: {direction}")
+    #         turn_payload = {"left": TURN_SPEED, "right": 0}
+    #         turn_goal_frames = self.calibrated_turn_frames.get('right_360', 100) // 4
+
+    #     # --- MODIFIED Logic for 180-degree turns ---
+    #     elif direction == "around":
+    #         print("Executing 180-degree SWING turn instead of a pivot turn.")
+    #         # We'll perform a 180-degree swing turn to the left by default.
+    #         # This is more stable than a pivot turn.
+    #         turn_payload = {"left": 0, "right": TURN_SPEED}
+    #         # The duration is double that of a 90-degree turn.
+    #         turn_goal_frames = self.calibrated_turn_frames.get('left_360', 100) // 2
+        
+    #     # 3. Initialize the state machine for the turn
+    #     self.turn_logic_state = {
+    #         "phase": "BLIND_TURN",
+    #         "frame_counter": 0,
+    #         "align_frame_counter": 0,
+    #         "confirmation_counter": 0,
+    #         "turn_goal_frames": turn_goal_frames,
+    #         "direction": turn_cmd, 
+    #         "payload": turn_payload 
+    #     }
+        
+    #     print(f"Initiating calibrated swing turn: {turn_cmd} with payload {turn_payload} for {turn_goal_frames} frames.")
+
+# In logic/robot_controller.py
+# <<< REPLACE the existing _initiate_turn function with this new version >>>
+
+    def _initiate_turn(self, direction: str, target_heading: float = None):
+        """
+        Initiates a turn based on the required type.
+        - For 'left'/'right': Uses a gentle swing turn (one wheel stops, one moves).
+        - For 'around': Uses a fast pivot turn (wheels move in opposite directions).
+        This is compatible with the limited ESP32 firmware.
+        """
+        # 1. Update robot's logical heading (No changes here)
+        if target_heading is not None:
+            self.robot_heading = target_heading
+        else:
+            if direction == "left": self.robot_heading -= 90
+            elif direction == "right": self.robot_heading += 90
+            elif direction == "around": self.robot_heading += 180
+
+        if self.robot_heading > 180: self.robot_heading -= 360
+        if self.robot_heading <= -180: self.robot_heading += 360
+        print(f"🔄 Robot heading updated to: {self.robot_heading:.1f} degrees.")
+
+        # --- START OF THE NEW LOGIC ---
+
+        # 2. Determine physical turn command and duration
+        # This section is now split based on the turn type.
+        
+        turn_cmd = "STOP" # Default command
+        turn_payload = None
+        
+        # --- Gentle Swing Turns for Intersections ('left' or 'right') ---
+        if direction in ["left", "right"]:
+            print(f"Executing SWING turn for direction: {direction}")
+            turn_cmd = "DRIVE" # We will send specific wheel speeds
+            TURN_SPEED = 220 # The speed of the moving wheel
+            
+            if direction == "left":
+                # To turn left, stop the left wheel and move the right wheel forward.
+                turn_payload = {"left": 0, "right": TURN_SPEED}
+            else: # direction == "right"
+                # To turn right, stop the right wheel and move the left wheel forward.
+                turn_payload = {"left": TURN_SPEED, "right": 0}
+                
+            turn_duration_map = {
+                "left": self.calibrated_turn_frames.get('left_360', 120) // 4,
+                "right": self.calibrated_turn_frames.get('right_360', 120) // 4
+            }
+            turn_goal_frames = turn_duration_map.get(direction, 25)
+
+        # --- Fast Pivot Turn for Dead-Ends ('around') ---
+        elif direction == "around":
+            print("Executing PIVOT turn for a dead-end.")
+            # For a 180-degree turn, we use the simple LEFT/RIGHT commands.
+            # The robot_communicator will translate these to pivot turns (e.g., left=200, right=-200).
+            # This is the ONLY place we use this method now.
+            if self.last_known_line_direction == "RIGHT":
+                turn_cmd = "RIGHT"
+                turn_goal_frames = self.calibrated_turn_frames.get('right_360', 120) // 2
+            else:
+                turn_cmd = "LEFT"
+                turn_goal_frames = self.calibrated_turn_frames.get('left_360', 120) // 2
+        
+        # 3. Initialize the state machine for the turn
+        self.turn_logic_state = {
+            "phase": "BLIND_TURN",
+            "frame_counter": 0,
+            "align_frame_counter": 0,
+            "confirmation_counter": 0,
+            "turn_goal_frames": turn_goal_frames,
+            "direction": turn_cmd, # This can be 'DRIVE', 'LEFT', or 'RIGHT'
+            "payload": turn_payload # This will be None for 'around' turns
+        }
+        
+        print(f"Initiating calibrated turn: {turn_cmd} with payload {turn_payload} for {turn_goal_frames} frames.")
+
+# In logic/robot_controller.py
+# REPLACE the existing _handle_turning_state function with this new version
+
+    def _handle_turning_state(self, line_info: dict | None):
+        """
+        Handles the multi-phase turning process.
+        This version has an increased timeout to prevent failures in dead-ends.
+        """
+        turn_logic = self.turn_logic_state
+        turn_cmd = turn_logic.get("direction", "LEFT")
+        turn_payload = turn_logic.get("payload", None)
+        
+        CONFIRMATION_GOAL = 10
+        # <<< --- THIS IS THE FIX --- >>>
+        # Increased the timeout from half a turn to a full 3/4 turn duration
+        # to give more time for alignment, especially after 180-degree turns.
+        ALIGN_TIMEOUT_FRAMES = self.calibrated_turn_frames.get('right_360', 100) * 3 // 4
+        # <<< --- END OF THE FIX --- >>>
+
+        # --- Phase 1: BLIND_TURN ---
+        if turn_logic.get("phase") == "BLIND_TURN":
+            self.robot_comm.set_drive_command(turn_cmd, turn_payload)
+            turn_logic["frame_counter"] += 1
+            
+            if turn_logic["frame_counter"] >= turn_logic["turn_goal_frames"]:
+                turn_logic["phase"] = "ALIGN"
+                turn_logic['align_frame_counter'] = 0
+                turn_logic['has_attempted_recovery'] = False 
+                print("DEBUG (Turn): Calibrated blind turn complete. Now aligning with vision.")
+            
+            return f"Turning (Blind Phase)... {turn_logic['frame_counter']}/{turn_logic['turn_goal_frames']}"
+
+        # --- Phase 2: ALIGN ---
+        elif turn_logic.get("phase") == "ALIGN":
+            turn_logic['align_frame_counter'] += 1
+
+            if turn_logic['align_frame_counter'] > ALIGN_TIMEOUT_FRAMES:
+                if turn_logic.get('has_attempted_recovery', False):
+                    print(f"❌ RECOVERY FAILED: Timeout reached again after {ALIGN_TIMEOUT_FRAMES} frames.")
+                    self.robot_comm.set_drive_command("STOP", None)
+                    self._set_state("IDLE", "Turn recovery failed due to timeout.")
+                    return "ERROR: Turn recovery timed out."
+                else:
+                    print(f"⚠️ ALIGN TIMEOUT: Attempting recovery turn.")
+                    turn_logic['phase'] = 'RECOVERY'
+                    turn_logic['recovery_frame_counter'] = 0
+                    turn_logic['has_attempted_recovery'] = True
+                    return "Align timed out. Starting recovery turn."
+
+            if line_info:
+                turn_logic["confirmation_counter"] += 1
+            else:
+                turn_logic["confirmation_counter"] = 0
+            
+            if turn_logic["confirmation_counter"] >= CONFIRMATION_GOAL:
+                print("✅ Turn successful: Line re-acquired and confirmed.")
+                self.robot_comm.set_drive_command("STOP", None)
+                
+                next_state = self.turn_state.get('next_state_after_turn', "DEPARTING_NODE")
+                if next_state == "DEPARTING_NODE":
+                    self.departing_frame_counter = 0
+
+                self._set_state(next_state, "Turn complete with confirmation.")
+                self.turn_logic_state = {}
+                return "Turn complete. Now departing."
+            
+            else:
+                self.robot_comm.set_drive_command(turn_cmd, turn_payload)
+                return f"Turning (Align Phase)... Searching [{turn_logic['confirmation_counter']}/{CONFIRMATION_GOAL}]"
+
+        # --- Phase 3: RECOVERY ---
+        elif turn_logic.get("phase") == "RECOVERY":
+            turn_logic['recovery_frame_counter'] += 1
+
+            if turn_logic['recovery_frame_counter'] > ALIGN_TIMEOUT_FRAMES:
+                turn_logic['phase'] = 'ALIGN'
+                turn_logic['align_frame_counter'] = 0
+                turn_logic['confirmation_counter'] = 0
+                print("DEBUG (Turn): Recovery turn complete. Re-attempting alignment.")
+                return "Recovery complete. Re-aligning..."
+            
+            else:
+                # For recovery, we always use a simple pivot turn
+                opposite_turn = "RIGHT" if turn_cmd == "LEFT" else "LEFT"
+                self.robot_comm.set_drive_command(opposite_turn, None)
+                return f"Recovery Turn ({opposite_turn})... {turn_logic['recovery_frame_counter']}/{ALIGN_TIMEOUT_FRAMES}"
+
+        # Failsafe
+        self._set_state("IDLE", "ERROR: Unknown turn phase.")
+        return "ERROR: Unknown turn phase. Stopping."

@@ -29,71 +29,71 @@ class ImageProcessor:
 # vision/image_processor.py
 # In vision/image_processor.py
 
-    def draw_diagnostics(self, frame: np.ndarray, line_info: dict | None, node_info: tuple, intersection_analysis: dict | None) -> np.ndarray:
-        """
-        Draws all diagnostic information onto the frame, including all FOUR 
-        intersection probe ROIs.
-        """
-        diag_frame = frame.copy()
-        node_roi_coords, line_roi_coords = self._get_rois(diag_frame.shape)
-        (nx1, ny1, nx2, ny2), (lx1, ly1, lx2, ly2) = node_roi_coords, line_roi_coords
+    # def draw_diagnostics(self, frame: np.ndarray, line_info: dict | None, node_info: tuple, intersection_analysis: dict | None) -> np.ndarray:
+    #     """
+    #     Draws all diagnostic information onto the frame, including all FOUR 
+    #     intersection probe ROIs.
+    #     """
+    #     diag_frame = frame.copy()
+    #     node_roi_coords, line_roi_coords = self._get_rois(diag_frame.shape)
+    #     (nx1, ny1, nx2, ny2), (lx1, ly1, lx2, ly2) = node_roi_coords, line_roi_coords
 
-        # --- Draw Node and Line ROIs ---
-        cv2.rectangle(diag_frame, (nx1, ny1), (nx2, ny2), (255, 100, 100), 2)
-        cv2.rectangle(diag_frame, (lx1, ly1), (lx2, ly2), (100, 255, 100), 2)
+    #     # --- Draw Node and Line ROIs ---
+    #     cv2.rectangle(diag_frame, (nx1, ny1), (nx2, ny2), (255, 100, 100), 2)
+    #     cv2.rectangle(diag_frame, (lx1, ly1), (lx2, ly2), (100, 255, 100), 2)
         
-        # --- Draw Node Info (Aruco ID) ---
-        node_id, node_corners = node_info
-        node_text = f"Node Detection: ID {node_id}" if node_id is not None else "Node Detection: ---"
-        cv2.putText(diag_frame, node_text, (nx1 + 10, ny1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 100, 100), 2)
-        if node_corners is not None:
-            cv2.polylines(diag_frame, [np.int32(node_corners)], True, (0, 255, 255), 2)
+    #     # --- Draw Node Info (Aruco ID) ---
+    #     node_id, node_corners = node_info
+    #     node_text = f"Node Detection: ID {node_id}" if node_id is not None else "Node Detection: ---"
+    #     cv2.putText(diag_frame, node_text, (nx1 + 10, ny1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 100, 100), 2)
+    #     if node_corners is not None:
+    #         cv2.polylines(diag_frame, [np.int32(node_corners)], True, (0, 255, 255), 2)
 
-        # --- Draw Line Following Info ---
-        if line_info:
-            pos_err = line_info.get("positional_error", 0)
-            ang_err = line_info.get("angle_error", 0.0)
-            line_text = f"PosErr:{pos_err}, AngErr:{ang_err:.1f}"
-            cv2.putText(diag_frame, line_text, (lx1 + 10, ly1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 255, 100), 2)
+    #     # --- Draw Line Following Info ---
+    #     if line_info:
+    #         pos_err = line_info.get("positional_error", 0)
+    #         ang_err = line_info.get("angle_error", 0.0)
+    #         line_text = f"PosErr:{pos_err}, AngErr:{ang_err:.1f}"
+    #         cv2.putText(diag_frame, line_text, (lx1 + 10, ly1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 255, 100), 2)
         
-        # --- Draw Intersection Analysis Probes ---
-        if intersection_analysis and node_id is not None and node_corners is not None:
-            # Get the same parameters used in analyze_intersection
-            PROBE_DISTANCE_FROM_CENTER = 35 
-            probe_w, probe_h = 25, 25
-            p_dist = PROBE_DISTANCE_FROM_CENTER
+    #     # --- Draw Intersection Analysis Probes ---
+    #     if intersection_analysis and node_id is not None and node_corners is not None:
+    #         # Get the same parameters used in analyze_intersection
+    #         PROBE_DISTANCE_FROM_CENTER = 50 
+    #         probe_w, probe_h = 25, 25
+    #         p_dist = PROBE_DISTANCE_FROM_CENTER
             
-            # Get the marker's center coordinates from node_info
-            marker_center_x = int(np.mean(node_corners[0][:, 0]))
-            marker_center_y = int(np.mean(node_corners[0][:, 1]))
+    #         # Get the marker's center coordinates from node_info
+    #         marker_center_x = int(np.mean(node_corners[0][:, 0]))
+    #         marker_center_y = int(np.mean(node_corners[0][:, 1]))
             
-            probe_color = (255, 200, 0) # Light Blue
+    #         probe_color = (255, 200, 0) # Light Blue
 
-            # Top probe
-            y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
-            x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
-            cv2.rectangle(diag_frame, (x1_up, y1_up), (x2_up, y2_up), probe_color, 2)
+    #         # Top probe
+    #         y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+    #         x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #         cv2.rectangle(diag_frame, (x1_up, y1_up), (x2_up, y2_up), probe_color, 2)
 
-            # Left probe
-            y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
-            x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
-            cv2.rectangle(diag_frame, (x1_left, y1_left), (x2_left, y2_left), probe_color, 2)
+    #         # Left probe
+    #         y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #         x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+    #         cv2.rectangle(diag_frame, (x1_left, y1_left), (x2_left, y2_left), probe_color, 2)
 
-            # Right probe
-            y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
-            x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
-            cv2.rectangle(diag_frame, (x1_right, y1_right), (x2_right, y2_right), probe_color, 2)
+    #         # Right probe
+    #         y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #         x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+    #         cv2.rectangle(diag_frame, (x1_right, y1_right), (x2_right, y2_right), probe_color, 2)
 
-            # <<< ADDED: Define and draw the coordinates for the DOWN probe rectangle >>>
-            y1_down, y2_down = marker_center_y + p_dist, marker_center_y + p_dist + probe_h
-            x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
-            cv2.rectangle(diag_frame, (x1_down, y1_down), (x2_down, y2_down), probe_color, 2)
+    #         # <<< ADDED: Define and draw the coordinates for the DOWN probe rectangle >>>
+    #         y1_down, y2_down = marker_center_y + p_dist, marker_center_y + p_dist + probe_h
+    #         x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #         cv2.rectangle(diag_frame, (x1_down, y1_down), (x2_down, y2_down), probe_color, 2)
             
-            # Display the analysis result text
-            analysis_text = f"Type: {intersection_analysis.get('type', '...')}, Exits: {intersection_analysis.get('exits', [])}"
-            cv2.putText(diag_frame, analysis_text, (nx1 + 10, ny1 + 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
+    #         # Display the analysis result text
+    #         analysis_text = f"Type: {intersection_analysis.get('type', '...')}, Exits: {intersection_analysis.get('exits', [])}"
+    #         cv2.putText(diag_frame, analysis_text, (nx1 + 10, ny1 + 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
 
-        return diag_frame
+    #     return diag_frame
         
     def load_calibration_data(self, filename: str = "calibration_data.yml"):
         try:
@@ -158,94 +158,94 @@ class ImageProcessor:
 
 # In vision/image_processor.py
 
-    def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
-        """
-        Analyzes an intersection by probing in FOUR directions and provides a detailed 
-        classification of the node type, including specific turns.
-        """
-        # --- 1. Find the ArUco marker and its center ---
-        corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
-        if ids is None:
-            return None
+    # def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
+    #     """
+    #     Analyzes an intersection by probing in FOUR directions and provides a detailed 
+    #     classification of the node type, including specific turns.
+    #     """
+    #     # --- 1. Find the ArUco marker and its center ---
+    #     corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
+    #     if ids is None:
+    #         return None
 
-        marker_corners = corners[0][0]
-        marker_center_x = int(np.mean(marker_corners[:, 0]))
-        marker_center_y = int(np.mean(marker_corners[:, 1]))
+    #     marker_corners = corners[0][0]
+    #     marker_center_x = int(np.mean(marker_corners[:, 0]))
+    #     marker_center_y = int(np.mean(marker_corners[:, 1]))
 
-        # --- 2. Create a clean binary image for analysis ---
-        processed_frame = bird_eye_frame.copy()
-        cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
-        gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
-        binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
+    #     # --- 2. Create a clean binary image for analysis ---
+    #     processed_frame = bird_eye_frame.copy()
+    #     cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
+    #     gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
+    #     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
 
-        # --- 3. Define and execute probes for all FOUR directions ---
-        PROBE_DISTANCE_FROM_CENTER = 35
-        probe_w, probe_h = 25, 25
-        p_dist = PROBE_DISTANCE_FROM_CENTER
+    #     # --- 3. Define and execute probes for all FOUR directions ---
+    #     PROBE_DISTANCE_FROM_CENTER = 55
+    #     probe_w, probe_h = 25, 25
+    #     p_dist = PROBE_DISTANCE_FROM_CENTER
 
-        # Define ROIs for all four directions
-        y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
-        x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
-        roi_up = binary[y1_up:y2_up, x1_up:x2_up]
+    #     # Define ROIs for all four directions
+    #     y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+    #     x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_up = binary[y1_up:y2_up, x1_up:x2_up]
 
-        y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
-        x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
-        roi_left = binary[y1_left:y2_left, x1_left:x2_left]
+    #     y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+    #     roi_left = binary[y1_left:y2_left, x1_left:x2_left]
 
-        y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
-        x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
-        roi_right = binary[y1_right:y2_right, x1_right:x2_right]
+    #     y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+    #     roi_right = binary[y1_right:y2_right, x1_right:x2_right]
 
-        y1_down = marker_center_y + p_dist
-        y2_down = marker_center_y + p_dist + probe_h
-        x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
-        roi_down = binary[y1_down:y2_down, x1_down:x2_down]
+    #     y1_down = marker_center_y + p_dist
+    #     y2_down = marker_center_y + p_dist + probe_h
+    #     x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_down = binary[y1_down:y2_down, x1_down:x2_down]
         
-        # --- 4. Collect all detected exits ---
-        INTENSITY_THRESHOLD = 40
-        exits = []
-        if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD: exits.append("up")
-        if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD: exits.append("left")
-        if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD: exits.append("right")
-        if roi_down.size > 0 and np.mean(roi_down) > INTENSITY_THRESHOLD: exits.append("down")
+    #     # --- 4. Collect all detected exits ---
+    #     INTENSITY_THRESHOLD = 55
+    #     exits = []
+    #     if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD: exits.append("up")
+    #     if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD: exits.append("left")
+    #     if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD: exits.append("right")
+    #     if roi_down.size > 0 and np.mean(roi_down) > INTENSITY_THRESHOLD: exits.append("down")
 
-        # --- 5. Classify the intersection with detailed turn logic ---
-        num_exits = len(exits)
-        node_type = "unknown"
-        exits_set = set(exits)
+    #     # --- 5. Classify the intersection with detailed turn logic ---
+    #     num_exits = len(exits)
+    #     node_type = "unknown"
+    #     exits_set = set(exits)
 
-        if num_exits == 4:
-            node_type = '4-way'
+    #     if num_exits == 4:
+    #         node_type = '4-way'
         
-        elif num_exits == 3:
-            node_type = '3-way'
+    #     elif num_exits == 3:
+    #         node_type = '3-way'
             
-        elif num_exits == 2:
-            # Check for straight paths first
-            if ('up' in exits_set and 'down' in exits_set) or \
-            ('left' in exits_set and 'right' in exits_set):
-                node_type = 'straight'
-            # --- Re-introducing detailed turn classification ---
-            # These names describe the shape of the corner. The robot's controller
-            # will calculate the actual turn direction (left/right) based on its approach.
-            elif 'up' in exits_set and 'left' in exits_set:
-                node_type = 'Turn-left'
-            elif 'up' in exits_set and 'right' in exits_set:
-                node_type = 'Turn-right'
-            elif 'down' in exits_set and 'left' in exits_set:
-                node_type = 'Turn (Down-Left)'
-            elif 'down' in exits_set and 'right' in exits_set:
-                node_type = 'Turn (Down-Right)'
-            else:
-                node_type = 'corner' # Fallback for any other 2-exit combo
+    #     elif num_exits == 2:
+    #         # Check for straight paths first
+    #         if ('up' in exits_set and 'down' in exits_set) or \
+    #         ('left' in exits_set and 'right' in exits_set):
+    #             node_type = 'straight'
+    #         # --- Re-introducing detailed turn classification ---
+    #         # These names describe the shape of the corner. The robot's controller
+    #         # will calculate the actual turn direction (left/right) based on its approach.
+    #         elif 'up' in exits_set and 'left' in exits_set:
+    #             node_type = 'Turn-left'
+    #         elif 'up' in exits_set and 'right' in exits_set:
+    #             node_type = 'Turn-right'
+    #         elif 'down' in exits_set and 'left' in exits_set:
+    #             node_type = 'Turn (Down-Left)'
+    #         elif 'down' in exits_set and 'right' in exits_set:
+    #             node_type = 'Turn (Down-Right)'
+    #         else:
+    #             node_type = 'corner' # Fallback for any other 2-exit combo
                 
-        elif num_exits == 1:
-            node_type = 'dead-end'
+    #     elif num_exits == 1:
+    #         node_type = 'dead-end'
             
-        elif num_exits == 0:
-            node_type = 'isolated'
+    #     elif num_exits == 0:
+    #         node_type = 'isolated'
 
-        return {"type": node_type, "exits": exits}
+    #     return {"type": node_type, "exits": exits}
 
     # def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
     #     """
@@ -467,3 +467,473 @@ class ImageProcessor:
             "positional_error": positional_error,
             "angle_error": angle_error
         }
+    
+
+# In vision/image_processor.py
+# <<< REPLACE the existing draw_diagnostics function with this new version >>>
+
+    def draw_diagnostics(self, frame: np.ndarray, line_info: dict | None, node_info: tuple, intersection_analysis: dict | None) -> np.ndarray:
+        """
+        Draws all diagnostic information onto the frame, including all FOUR
+        intersection probe ROIs, now correctly rotated based on the ArUco marker's orientation.
+        """
+        diag_frame = frame.copy()
+        node_roi_coords, line_roi_coords = self._get_rois(diag_frame.shape)
+        (nx1, ny1, nx2, ny2), (lx1, ly1, lx2, ly2) = node_roi_coords, line_roi_coords
+
+        # --- Draw Node and Line ROIs (These are fixed) ---
+        cv2.rectangle(diag_frame, (nx1, ny1), (nx2, ny2), (255, 100, 100), 2)
+        cv2.rectangle(diag_frame, (lx1, ly1), (lx2, ly2), (100, 255, 100), 2)
+        
+        # --- Draw Node Info (Aruco ID) ---
+        node_id, node_corners = node_info
+        node_text = f"Node Detection: ID {node_id}" if node_id is not None else "Node Detection: ---"
+        cv2.putText(diag_frame, node_text, (nx1 + 10, ny1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 100, 100), 2)
+        if node_corners is not None:
+            cv2.polylines(diag_frame, [np.int32(node_corners)], True, (0, 255, 255), 2)
+
+        # --- Draw Line Following Info ---
+        if line_info:
+            pos_err = line_info.get("positional_error", 0)
+            ang_err = line_info.get("angle_error", 0.0)
+            line_text = f"PosErr:{pos_err}, AngErr:{ang_err:.1f}"
+            cv2.putText(diag_frame, line_text, (lx1 + 10, ly1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 255, 100), 2)
+        
+        # --- Draw ROTATED Intersection Analysis Probes ---
+        if intersection_analysis and node_id is not None and node_corners is not None:
+            # --- 1. Get marker center and rotation angle ---
+            marker_center = np.mean(node_corners[0], axis=0).astype(int)
+            marker_center_x, marker_center_y = marker_center
+            
+            top_left = node_corners[0][0]
+            top_right = node_corners[0][1]
+            angle_rad = np.arctan2(top_right[1] - top_left[1], top_right[0] - top_left[0])
+            angle_deg = np.degrees(angle_rad)
+            
+            # The angle for rotating the coordinate system is perpendicular to the top edge's angle.
+            rot_angle_rad = angle_rad - np.pi / 2.0
+            cos_a = np.cos(rot_angle_rad)
+            sin_a = np.sin(rot_angle_rad)
+            
+            # --- 2. Define probe properties ---
+            PROBE_DISTANCE_FROM_CENTER = 55 
+            probe_w, probe_h = 25, 25
+            p_dist = PROBE_DISTANCE_FROM_CENTER
+            probe_color = (255, 200, 0) # Light Blue
+
+            # --- 3. Define, Rotate, and Draw each probe box ---
+            probe_definitions = {
+                "up":    (0, -p_dist),
+                "left":  (-p_dist, 0),
+                "right": (p_dist, 0),
+                "down":  (0, p_dist)
+            }
+            
+            for direction, (cx_rel, cy_rel) in probe_definitions.items():
+                # Define corners of the probe rectangle in its own local, non-rotated space
+                half_w, half_h = probe_w / 2, probe_h / 2
+                local_corners = np.array([
+                    [-half_w, -half_h], [half_w, -half_h],
+                    [half_w, half_h], [-half_w, half_h]
+                ])
+                
+                # Create rotation matrix
+                R = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
+                
+                # Rotate the corners
+                rotated_corners = local_corners @ R.T
+                
+                # Translate the corners to the probe's center and then to the marker's center
+                final_corners = rotated_corners + np.array([cx_rel, cy_rel]) + marker_center
+                
+                # Draw the rotated rectangle
+                cv2.polylines(diag_frame, [np.int32(final_corners)], isClosed=True, color=probe_color, thickness=2)
+
+            # Display the analysis result text
+            analysis_text = f"Type: {intersection_analysis.get('type', '...')}, Exits: {intersection_analysis.get('exits', [])}"
+            cv2.putText(diag_frame, analysis_text, (nx1 + 10, ny1 + 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
+
+        return diag_frame
+    
+# In vision/image_processor.py
+# <<< REPLACE the existing analyze_intersection function with this CORRECTED version >>>
+
+    # def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
+    #     """
+    #     Analyzes an intersection by probing in FOUR directions, with the probes
+    #     dynamically rotated based on the ArUco marker's orientation for maximum accuracy.
+    #     """
+    #     # --- 1. Find the ArUco marker and its properties ---
+    #     corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
+    #     if ids is None:
+    #         return None
+
+    #     marker_corners = corners[0][0]
+    #     marker_center = np.mean(marker_corners, axis=0).astype(int)
+    #     marker_center_x, marker_center_y = marker_center
+
+    #     # --- 2. Calculate the marker's rotation angle ---
+    #     top_left = marker_corners[0]
+    #     top_right = marker_corners[1]
+    #     angle_rad = np.arctan2(top_right[1] - top_left[1], top_right[0] - top_left[0])
+    #     angle_deg = np.degrees(angle_rad)
+
+    #     # --- 3. Create a clean binary image for analysis ---
+    #     processed_frame = bird_eye_frame.copy()
+    #     cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
+    #     gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
+    #     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
+
+    #     # --- 4. Rotate the entire binary image to align the marker vertically ---
+    #     h, w = binary.shape
+        
+    #     # <<< --- THIS IS THE FIX --- >>>
+    #     # Explicitly cast the center coordinates to standard Python integers.
+    #     rotation_center = (int(marker_center_x), int(marker_center_y))
+    #     rotation_matrix = cv2.getRotationMatrix2D(rotation_center, angle_deg - 90, 1.0)
+    #     # <<< --- END OF THE FIX --- >>>
+        
+    #     rotated_binary = cv2.warpAffine(binary, rotation_matrix, (w, h))
+
+    #     # --- 5. Define and execute probes on the ROTATED image ---
+    #     PROBE_DISTANCE_FROM_CENTER = 55
+    #     probe_w, probe_h = 25, 25
+    #     p_dist = PROBE_DISTANCE_FROM_CENTER
+
+    #     y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+    #     x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_up = rotated_binary[y1_up:y2_up, x1_up:x2_up]
+
+    #     y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+    #     roi_left = rotated_binary[y1_left:y2_left, x1_left:x2_left]
+
+    #     y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+    #     roi_right = rotated_binary[y1_right:y2_right, x1_right:x2_right]
+
+    #     y1_down = marker_center_y + p_dist
+    #     y2_down = marker_center_y + p_dist + probe_h
+    #     x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_down = rotated_binary[y1_down:y2_down, x1_down:x2_down]
+        
+    #     # --- 6. Collect all detected exits ---
+    #     INTENSITY_THRESHOLD = 55
+    #     exits = []
+    #     if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD: exits.append("up")
+    #     if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD: exits.append("left")
+    #     if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD: exits.append("right")
+    #     if roi_down.size > 0 and np.mean(roi_down) > INTENSITY_THRESHOLD: exits.append("down")
+
+    #     # --- 7. Classify the intersection (logic remains the same) ---
+    #     num_exits = len(exits)
+    #     node_type = "unknown"
+    #     exits_set = set(exits)
+
+    #     if num_exits == 4:
+    #         node_type = '4-way'
+    #     elif num_exits == 3:
+    #         node_type = '3-way'
+    #     elif num_exits == 2:
+    #         if ('up' in exits_set and 'down' in exits_set) or \
+    #            ('left' in exits_set and 'right' in exits_set):
+    #             node_type = 'straight'
+    #         elif 'up' in exits_set and 'left' in exits_set:
+    #             node_type = 'Turn-left'
+    #         elif 'up' in exits_set and 'right' in exits_set:
+    #             node_type = 'Turn-right'
+    #         elif 'down' in exits_set and 'left' in exits_set:
+    #             node_type = 'Turn (Down-Left)'
+    #         elif 'down' in exits_set and 'right' in exits_set:
+    #             node_type = 'Turn (Down-Right)'
+    #         else:
+    #             node_type = 'corner'
+    #     elif num_exits == 1:
+    #         node_type = 'dead-end'
+    #     elif num_exits == 0:
+    #         node_type = 'isolated'
+
+    #     return {"type": node_type, "exits": exits}
+    
+
+
+# In vision/image_processor.py
+# <<< REPLACE the existing analyze_intersection function with this CORRECTED version >>>
+
+    # def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
+    #     """
+    #     Analyzes an intersection by probing in FOUR directions, with the probes
+    #     dynamically rotated based on the ArUco marker's orientation for maximum accuracy.
+    #     This version fixes a critical bug where the 'down' probe was ignored.
+    #     """
+    #     # --- 1. Find the ArUco marker and its properties ---
+    #     corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
+    #     if ids is None:
+    #         return None
+
+    #     marker_corners = corners[0][0]
+    #     marker_center = np.mean(marker_corners, axis=0).astype(int)
+    #     marker_center_x, marker_center_y = marker_center
+
+    #     # --- 2. Calculate the marker's rotation angle ---
+    #     top_left = marker_corners[0]
+    #     top_right = marker_corners[1]
+    #     angle_rad = np.arctan2(top_right[1] - top_left[1], top_right[0] - top_left[0])
+    #     angle_deg = np.degrees(angle_rad)
+
+    #     # --- 3. Create a clean binary image for analysis ---
+    #     processed_frame = bird_eye_frame.copy()
+    #     cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
+    #     gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
+    #     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
+
+    #     # --- 4. Rotate the entire binary image to align the marker vertically ---
+    #     h, w = binary.shape
+    #     rotation_center = (int(marker_center_x), int(marker_center_y))
+    #     rotation_matrix = cv2.getRotationMatrix2D(rotation_center, angle_deg - 90, 1.0)
+    #     rotated_binary = cv2.warpAffine(binary, rotation_matrix, (w, h))
+
+    #     # --- 5. Define and execute probes on the ROTATED image ---
+    #     PROBE_DISTANCE_FROM_CENTER = 55
+    #     probe_w, probe_h = 25, 25
+    #     p_dist = PROBE_DISTANCE_FROM_CENTER
+
+    #     y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+    #     x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_up = rotated_binary[y1_up:y2_up, x1_up:x2_up]
+
+    #     y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+    #     roi_left = rotated_binary[y1_left:y2_left, x1_left:x2_left]
+
+    #     y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+    #     roi_right = rotated_binary[y1_right:y2_right, x1_right:x2_right]
+
+    #     y1_down = marker_center_y + p_dist
+    #     y2_down = marker_center_y + p_dist + probe_h
+    #     x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_down = rotated_binary[y1_down:y2_down, x1_down:x2_down]
+        
+    #     # --- 6. Collect all detected exits ---
+    #     INTENSITY_THRESHOLD = 55
+    #     exits = []
+    #     if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD: exits.append("up")
+    #     if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD: exits.append("left")
+    #     if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD: exits.append("right")
+        
+    #     # <<< --- THIS IS THE CRITICAL FIX --- >>>
+    #     # The missing check for the 'down' probe is now added.
+    #     if roi_down.size > 0 and np.mean(roi_down) > INTENSITY_THRESHOLD: exits.append("down")
+    #     # <<< --- END OF THE FIX --- >>>
+
+    #     # --- 7. Classify the intersection (logic remains the same) ---
+    #     num_exits = len(exits)
+    #     node_type = "unknown"
+    #     exits_set = set(exits)
+
+    #     if num_exits == 4:
+    #         node_type = '4-way'
+    #     elif num_exits == 3:
+    #         node_type = '3-way'
+    #     elif num_exits == 2:
+    #         if ('up' in exits_set and 'down' in exits_set) or \
+    #            ('left' in exits_set and 'right' in exits_set):
+    #             node_type = 'straight'
+    #         else:
+    #             node_type = 'corner' 
+    #     elif num_exits == 1:
+    #         node_type = 'dead-end'
+    #     elif num_exits == 0:
+    #         node_type = 'isolated'
+
+    #     return {"type": node_type, "exits": exits}
+    
+# In vision/image_processor.py
+# <<< REPLACE the existing analyze_intersection function with this FINAL, CORRECTED version >>>
+
+# In vision/image_processor.py
+# <<< REPLACE the existing analyze_intersection function with this FINAL, CORRECTED version >>>
+
+    # def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
+    #     """
+    #     Analyzes an intersection by dynamically rotating the image based on the
+    #     robot's true forward direction (marker center to top-edge midpoint).
+    #     This ensures directions are always relative to the robot, fixing the bug.
+    #     """
+    #     # --- 1. Find the ArUco marker and its properties ---
+    #     corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
+    #     if ids is None:
+    #         return None
+
+    #     marker_corners = corners[0][0]
+    #     marker_center = np.mean(marker_corners, axis=0)
+        
+    #     # --- 2. Calculate the robot's true orientation angle ---
+    #     top_left = marker_corners[0]
+    #     top_right = marker_corners[1]
+    #     top_midpoint = (top_left + top_right) / 2
+        
+    #     # The "up vector" points from the center to the middle of the top edge.
+    #     up_vector = top_midpoint - marker_center
+        
+    #     # Calculate the angle of this vector. This is the robot's true heading.
+    #     # Image coordinates have Y increasing downwards, so atan2(y, x).
+    #     robot_angle_rad = np.arctan2(up_vector[1], up_vector[0])
+    #     robot_angle_deg = np.degrees(robot_angle_rad)
+
+    #     # --- 3. Create a clean binary image for analysis ---
+    #     processed_frame = bird_eye_frame.copy()
+    #     cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
+    #     gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
+    #     binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
+
+    #     # --- 4. Rotate the image to align the robot's "up" direction with the image's "up" ---
+    #     h, w = binary.shape
+    #     rotation_center = (int(marker_center[0]), int(marker_center[1]))
+        
+    #     # We need to rotate the image so the robot's angle points to -90 degrees (image top).
+    #     # The required rotation is (-90 - robot_angle_deg).
+    #     rotation_angle = -90.0 - robot_angle_deg
+    #     rotation_matrix = cv2.getRotationMatrix2D(rotation_center, rotation_angle, 1.0)
+        
+    #     rotated_binary = cv2.warpAffine(binary, rotation_matrix, (w, h))
+
+    #     # --- 5. Define and execute probes on the correctly aligned image ---
+    #     # The center point remains the same in the rotated image.
+    #     marker_center_x, marker_center_y = rotation_center
+
+    #     PROBE_DISTANCE_FROM_CENTER = 55
+    #     probe_w, probe_h = 25, 25
+    #     p_dist = PROBE_DISTANCE_FROM_CENTER
+
+    #     y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+    #     x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_up = rotated_binary[y1_up:y2_up, x1_up:x2_up]
+
+    #     y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+    #     roi_left = rotated_binary[y1_left:y2_left, x1_left:x2_left]
+
+    #     y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+    #     x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+    #     roi_right = rotated_binary[y1_right:y2_right, x1_right:x2_right]
+
+    #     y1_down = marker_center_y + p_dist
+    #     y2_down = marker_center_y + p_dist + probe_h
+    #     x1_down, x2_down = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+    #     roi_down = rotated_binary[y1_down:y2_down, x1_down:x2_down]
+        
+    #     # --- 6. Collect all detected exits ---
+    #     INTENSITY_THRESHOLD = 50
+    #     exits = []
+    #     if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD: exits.append("up")
+    #     if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD: exits.append("left")
+    #     if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD: exits.append("right")
+    #     if roi_down.size > 0 and np.mean(roi_down) > INTENSITY_THRESHOLD: exits.append("down")
+
+    #     # --- 7. Classify the intersection (logic remains the same) ---
+    #     num_exits = len(exits)
+    #     node_type = "unknown"
+    #     exits_set = set(exits)
+
+    #     if num_exits == 4:
+    #         node_type = '4-way'
+    #     elif num_exits == 3:
+    #         node_type = '3-way'
+    #     elif num_exits == 2:
+    #         if ('up' in exits_set and 'down' in exits_set) or \
+    #            ('left' in exits_set and 'right' in exits_set):
+    #             node_type = 'straight'
+    #         else:
+    #             node_type = 'corner' 
+    #     elif num_exits == 1:
+    #         node_type = 'dead-end'
+    #     elif num_exits == 0:
+    #         node_type = 'isolated'
+
+    #     return {"type": node_type, "exits": exits}
+
+    # In vision/image_processor.py
+
+    # In vision/image_processor.py
+    # <<< REPLACE the existing analyze_intersection function with this new version >>>
+    def analyze_intersection(self, bird_eye_frame: np.ndarray) -> dict | None:
+        """
+        This version has UPDATED classification logic to better distinguish
+        between T-junctions and simple corners, resolving the user's issue.
+        """
+        corners, ids, _ = self.aruco_detector.detectMarkers(bird_eye_frame)
+        if ids is None:
+            return None
+
+        # --- 1. Get Marker's Center ---
+        marker_corners = corners[0][0]
+        marker_center_x = int(np.mean(marker_corners[:, 0]))
+        marker_center_y = int(np.mean(marker_corners[:, 1]))
+
+        # --- 2. Create Binary Image for Probing ---
+        processed_frame = bird_eye_frame.copy()
+        cv2.fillPoly(processed_frame, [np.int32(marker_corners)], (255, 255, 255))
+        gray = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2GRAY)
+        binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 25, 5)
+
+        # --- 3. Define the Probe ROIs ---
+        PROBE_DISTANCE_FROM_CENTER = 35
+        probe_w, probe_h = 25, 25
+        p_dist = PROBE_DISTANCE_FROM_CENTER
+
+        y1_up, y2_up = marker_center_y - p_dist - probe_h, marker_center_y - p_dist
+        x1_up, x2_up = marker_center_x - probe_w // 2, marker_center_x + probe_w // 2
+        roi_up = binary[y1_up:y2_up, x1_up:x2_up]
+
+        y1_left, y2_left = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+        x1_left, x2_left = marker_center_x - p_dist - probe_w, marker_center_x - p_dist
+        roi_left = binary[y1_left:y2_left, x1_left:x2_left]
+
+        y1_right, y2_right = marker_center_y - probe_h // 2, marker_center_y + probe_h // 2
+        x1_right, x2_right = marker_center_x + p_dist, marker_center_x + p_dist + probe_w
+        roi_right = binary[y1_right:y2_right, x1_right:x2_right]
+
+        # --- 4. Probe Each ROI ---
+        INTENSITY_THRESHOLD = 40
+        exits = []
+        if roi_up.size > 0 and np.mean(roi_up) > INTENSITY_THRESHOLD:
+            exits.append("up")
+        if roi_left.size > 0 and np.mean(roi_left) > INTENSITY_THRESHOLD:
+            exits.append("left")
+        if roi_right.size > 0 and np.mean(roi_right) > INTENSITY_THRESHOLD:
+            exits.append("right")
+
+        # <<< --- START OF THE LOGIC FIX --- >>>
+        # --- 5. UPDATED Intersection Classification Logic ---
+        num_exits = len(exits)
+        node_type = "unknown"
+        exits_set = set(exits)
+
+        if num_exits == 3:
+            node_type = '4-way'  # All 3 probes detected a line -> crossroad
+
+        elif num_exits == 2:
+            # A T-junction allows going straight OR turning, or forces a left/right turn.
+            # A corner is the combination of the entry path and one turn.
+            if 'up' in exits_set or ('left' in exits_set and 'right' in exits_set):
+                node_type = '3-way' # This is a classic T-junction
+            else:
+                # e.g., {'down', 'left'} or {'down', 'right'} from the robot's local view
+                node_type = 'Corner' # This is a simple 90-degree turn
+
+        elif num_exits == 1:
+            if 'up' in exits:
+                node_type = 'straight'
+            elif 'left' in exits:
+                node_type = 'Turn-left'
+            elif 'right' in exits:
+                node_type = 'Turn-right'
+
+        elif num_exits == 0:
+            node_type = 'dead-end'
+
+        # <<< ---  END OF THE LOGIC FIX  --- >>>
+
+        return {"type": node_type, "exits": exits}

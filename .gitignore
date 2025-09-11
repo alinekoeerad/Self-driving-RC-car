@@ -1,1 +1,23 @@
-__pycache__
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+
+# Visual Studio & C#
+.vs/
+bin/
+obj/
+*.user
+*.csproj.user
+*.suo
+*.sln.dotsettings

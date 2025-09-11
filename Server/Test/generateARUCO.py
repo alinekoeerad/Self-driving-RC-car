@@ -21,7 +21,7 @@ def generate_aruco_sheet(start_id, end_id, output_filename="aruco_sheet.png"):
     A4_HEIGHT_PX = math.floor(A4_HEIGHT_CM / INCH_TO_CM * DPI)
 
     # --- Marker and Layout Settings ---
-    MARKER_SIZE_CM = 2.0
+    MARKER_SIZE_CM = 3.0
     MARGIN_CM = 1.0  # Margin from the edge of the paper
     GAP_CM = 0.5     # Gap between markers
 
